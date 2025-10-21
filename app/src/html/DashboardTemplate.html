@@ -1,4 +1,4 @@
-<template>
+<div id="dashboard-template">
   <div class="card shadow-sm">
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center">
@@ -53,64 +53,4 @@
       </form>
     </div>
   </div>
-</template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { auth, db } from '@/firebase'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-// Bootstrap Modal (JS-API)
-import Modal from 'bootstrap/js/dist/modal'
-
-const customerName = ref('')
-const loading = ref(false)
-const message = ref(null)
-
-const modalRef = ref(null)
-let modalInstance = null
-
-onMounted(() => {
-  if (modalRef.value) {
-    modalInstance = new Modal(modalRef.value, { backdrop: 'static' })
-  }
-})
-
-const openModal = () => {
-  message.value = null
-  customerName.value = ''
-  modalInstance?.show()
-}
-
-const closeModal = () => {
-  modalInstance?.hide()
-}
-
-const createCustomer = async () => {
-  message.value = null
-  if (!customerName.value) return
-
-  // aktuellen User prüfen
-  const user = auth.currentUser
-  if (!user) {
-    message.value = { type: 'error', text: 'Du bist nicht eingeloggt.' }
-    closeModal()
-    return
-  }
-
-  loading.value = true
-  try {
-    await addDoc(collection(db, `users/${user.uid}/customers`), {
-      name: customerName.value,
-      createdAt: serverTimestamp(),
-    })
-    message.value = { type: 'success', text: `Kunde „${customerName.value}“ wurde angelegt.` }
-    closeModal()
-  } catch (e) {
-    console.error(e)
-    message.value = { type: 'error', text: 'Anlegen fehlgeschlagen. Bitte später erneut versuchen.' }
-    closeModal()
-  } finally {
-    loading.value = false
-  }
-}
-</script>
+</div>

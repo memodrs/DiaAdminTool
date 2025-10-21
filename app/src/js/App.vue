@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
     <div class="container">
-      <a class="navbar-brand" href="#">MyApp</a>
+      <a class="navbar-brand versuch" href="#">Admin Tool</a>
       <div class="ms-auto d-flex align-items-center gap-2">
         <button
           v-if="user"
