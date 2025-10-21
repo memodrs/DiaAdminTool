@@ -1,11 +1,39 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+    <div class="container">
+      <a class="navbar-brand" href="#">MyApp</a>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <button
+          v-if="user"
+          class="btn btn-outline-secondary btn-sm"
+          @click="logout"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <router-view />
+  </main>
 </template>
 
-<style scoped></style>
+<script setup>
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { ref } from 'vue'
+import { auth } from '@/firebase'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const user = ref(null)
+
+onAuthStateChanged(auth, (u) => {
+  user.value = u
+})
+
+const logout = async () => {
+  await signOut(auth)
+  router.push({ name: 'Login' })
+}
+</script>
